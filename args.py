@@ -1,11 +1,11 @@
 
 ### program configuration
 class Args():
-    def __init__(self):
+    def __init__(self,num_layers,num_layers_edge,cuda_number):
         ### if clean tensorboard
         self.clean_tensorboard = False
         ### Which CUDA GPU device is used for training
-        self.cuda = 1
+        self.cuda = (cuda_number)
 
         ### Which GraphRNN model variant is used.
         # The simple version of Graph RNN
@@ -59,7 +59,8 @@ class Args():
         self.batch_size = 32 # normal: 32, and the rest should be changed accordingly
         self.test_batch_size = 32
         self.test_total_size = 1000
-        self.num_layers = 4
+        self.num_layers = num_layers
+        self.num_layers_edge = num_layers_edge
 
         ### training config
         self.num_workers = 4 # num workers to load data, default 4
@@ -102,9 +103,9 @@ class Args():
 
 
         ### filenames to save intemediate and final outputs
-        self.fname = self.note + '_' + self.graph_type + '_' + str(self.num_layers) + '_' + str(self.hidden_size_rnn) + '_'
-        self.fname_pred = self.note+'_'+self.graph_type+'_'+str(self.num_layers)+'_'+ str(self.hidden_size_rnn)+'_pred_'
-        self.fname_train = self.note+'_'+self.graph_type+'_'+str(self.num_layers)+'_'+ str(self.hidden_size_rnn)+'_train_'
-        self.fname_test = self.note + '_' + self.graph_type + '_' + str(self.num_layers) + '_' + str(self.hidden_size_rnn) + '_test_'
+        self.fname = self.note + '_' + self.graph_type + '_' + str(self.num_layers) + '_' + str(self.num_layers_edge)+ '_' + str(self.hidden_size_rnn) + '_'
+        self.fname_pred = self.note+'_'+self.graph_type+'_'+str(self.num_layers) + '_' + str(self.num_layers_edge)+'_'+ str(self.hidden_size_rnn)+'_pred_'
+        self.fname_train = self.note+'_'+self.graph_type+'_'+str(self.num_layers) + '_' + str(self.num_layers_edge)+'_'+ str(self.hidden_size_rnn)+'_train_'
+        self.fname_test = self.note + '_' + self.graph_type + '_' + str(self.num_layers) + '_' + str(self.num_layers_edge) + '_' + str(self.hidden_size_rnn) + '_test_'
         self.fname_baseline = self.graph_save_path + self.graph_type + self.generator_baseline+'_'+self.metric_baseline
 

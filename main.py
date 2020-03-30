@@ -1,8 +1,9 @@
 from train import *
+import sys
 
 if __name__ == '__main__':
     # All necessary arguments are defined in args.py
-    args = Args()
+    args = Args(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[3]))
     os.environ['CUDA_VISIBLE_DEVICES'] = str(args.cuda)
     print('CUDA', args.cuda)
     print('File name prefix',args.fname)
@@ -127,7 +128,7 @@ if __name__ == '__main__':
                         hidden_size=args.hidden_size_rnn, num_layers=args.num_layers, has_input=True,
                         has_output=True, output_size=args.hidden_size_rnn_output).cuda()
         output = GRU_plain(input_size=1, embedding_size=args.embedding_size_rnn_output,
-                           hidden_size=args.hidden_size_rnn_output, num_layers=args.num_layers, has_input=True,
+                           hidden_size=args.hidden_size_rnn_output, num_layers=args.num_layers_edge, has_input=True,
                            has_output=True, output_size=1).cuda()
 
     ### start training
