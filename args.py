@@ -1,7 +1,7 @@
 
 ### program configuration
 class Args():
-    def __init__(self,num_layers,num_layers_edge,cuda_number):
+    def __init__(self,num_layers=4,num_layers_edge=4,cuda_number=3,hidden_size_rnn=128,hidden_size_rnn_output=16,embedding_size_rnn=64, embedding_size_rnn_output = 8,graph_type="citeseer_small"):
         ### if clean tensorboard
         self.clean_tensorboard = False
         ### Which CUDA GPU device is used for training
@@ -23,7 +23,7 @@ class Args():
         # self.graph_type = 'caveman_small'
         # self.graph_type = 'caveman_small_single'
         # self.graph_type = 'community4'
-        self.graph_type = 'grid'
+        # self.graph_type = 'grid'
         # self.graph_type = 'grid_small'
         # self.graph_type = 'ladder_small'
 
@@ -32,7 +32,7 @@ class Args():
         # self.graph_type = 'barabasi'
         # self.graph_type = 'barabasi_small'
         # self.graph_type = 'citeseer'
-        # self.graph_type = 'citeseer_small'
+        self.graph_type = graph_type
 
         # self.graph_type = 'barabasi_noise'
         # self.noise = 10
@@ -50,10 +50,10 @@ class Args():
             self.parameter_shrink = 2
         else:
             self.parameter_shrink = 1
-        self.hidden_size_rnn = int(128/self.parameter_shrink) # hidden size for main RNN
-        self.hidden_size_rnn_output = 16 # hidden size for output RNN
-        self.embedding_size_rnn = int(64/self.parameter_shrink) # the size for LSTM input
-        self.embedding_size_rnn_output = 8 # the embedding size for output rnn
+        self.hidden_size_rnn = int(hidden_size_rnn/self.parameter_shrink) # hidden size for main RNN
+        self.hidden_size_rnn_output = hidden_size_rnn_output # hidden size for output RNN
+        self.embedding_size_rnn = int(embedding_size_rnn/self.parameter_shrink) # the size for LSTM input
+        self.embedding_size_rnn_output = embedding_size_rnn_output # the embedding size for output rnn
         self.embedding_size_output = int(64/self.parameter_shrink) # the embedding size for output (VAE/MLP)
 
         self.batch_size = 32 # normal: 32, and the rest should be changed accordingly
@@ -103,9 +103,9 @@ class Args():
 
 
         ### filenames to save intemediate and final outputs
-        self.fname = self.note + '_' + self.graph_type + '_' + str(self.num_layers) + '_' + str(self.num_layers_edge)+ '_' + str(self.hidden_size_rnn) + '_'
-        self.fname_pred = self.note+'_'+self.graph_type+'_'+str(self.num_layers) + '_' + str(self.num_layers_edge)+'_'+ str(self.hidden_size_rnn)+'_pred_'
-        self.fname_train = self.note+'_'+self.graph_type+'_'+str(self.num_layers) + '_' + str(self.num_layers_edge)+'_'+ str(self.hidden_size_rnn)+'_train_'
-        self.fname_test = self.note + '_' + self.graph_type + '_' + str(self.num_layers) + '_' + str(self.num_layers_edge) + '_' + str(self.hidden_size_rnn) + '_test_'
+        self.fname = self.note + '_' + self.graph_type + '_' + str(self.num_layers) + '_' + str(self.num_layers_edge)+ '_' + str(self.hidden_size_rnn) + '_' + str(self.hidden_size_rnn_output) + '_' + str(self.embedding_size_rnn) + '_' + str(embedding_size_rnn_output) + '_'
+        self.fname_pred = self.note+'_'+self.graph_type+'_'+str(self.num_layers) + '_' + str(self.num_layers_edge)+'_'+ str(self.hidden_size_rnn) + '_' + str(self.hidden_size_rnn_output) + '_' + str(self.embedding_size_rnn) + '_' + str(embedding_size_rnn_output) +'_pred_'
+        self.fname_train = self.note+'_'+self.graph_type+'_'+str(self.num_layers) + '_' + str(self.num_layers_edge)+'_'+ str(self.hidden_size_rnn) + '_' + str(self.hidden_size_rnn_output) + '_' + str(self.embedding_size_rnn) + '_' + str(embedding_size_rnn_output) + '_train_'
+        self.fname_test = self.note + '_' + self.graph_type + '_' + str(self.num_layers) + '_' + str(self.num_layers_edge) + '_' + str(self.hidden_size_rnn) + '_' + str(self.hidden_size_rnn_output) + '_' + str(self.embedding_size_rnn) + '_' + str(embedding_size_rnn_output) + '_test_'
         self.fname_baseline = self.graph_save_path + self.graph_type + self.generator_baseline+'_'+self.metric_baseline
 

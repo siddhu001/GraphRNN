@@ -3,7 +3,7 @@ import sys
 
 if __name__ == '__main__':
     # All necessary arguments are defined in args.py
-    args = Args(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[3]))
+    args = Args(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[3]),int(sys.argv[4]),int(sys.argv[5]),int(sys.argv[6]),int(sys.argv[7]),sys.argv[8])
     os.environ['CUDA_VISIBLE_DEVICES'] = str(args.cuda)
     print('CUDA', args.cuda)
     print('File name prefix',args.fname)

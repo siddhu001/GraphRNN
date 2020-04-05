@@ -21,7 +21,7 @@ class Args_evaluate():
         # list of dataset to evaluate
         # use a list of 1 element to evaluate a single dataset
         # self.dataset_name_all = ['caveman', 'grid', 'barabasi', 'citeseer', 'DD']
-        self.dataset_name_all = ['grid']
+        self.dataset_name_all = ['caveman_small']
         # self.dataset_name_all = ['citeseer_small','caveman_small']
         # self.dataset_name_all = ['barabasi_noise0','barabasi_noise2','barabasi_noise4','barabasi_noise6','barabasi_noise8','barabasi_noise10']
         # self.dataset_name_all = ['caveman_small', 'ladder_small', 'grid_small', 'ladder_small', 'enzymes_small', 'barabasi_small','citeseer_small']
@@ -130,11 +130,9 @@ def load_ground_truth(dir_input, dataset_name, model_name='GraphRNN_RNN'):
     else:
         hidden = 64
     if model_name=='Internal' or model_name=='Noise' or model_name=='B-A' or model_name=='E-R':
-        fname_test = dir_input + 'GraphRNN_MLP' + '_' + dataset_name + '_' + str(args.num_layers) + '_' + str(
-                hidden) + '_test_' + str(0) + '.dat'
+        fname_test = dir_input + 'GraphRNN_MLP' + '_' + dataset_name + '_' + str(args.num_layers) + '_' + str(args.num_layers_edge)+ '_' + str(args.hidden_size_rnn) + '_' + str(args.hidden_size_rnn_output) + '_' + str(args.embedding_size_rnn) + '_' + str(args.embedding_size_rnn_output) + '_test_' + str(0) + '.dat'
     else:
-        fname_test = dir_input + model_name + '_' + dataset_name + '_' + str(args.num_layers) + '_' + str(
-                hidden) + '_test_' + str(0) + '.dat'
+        fname_test = dir_input + model_name + '_' + dataset_name + '_' + str(args.num_layers) + '_' + str(args.num_layers_edge) + '_' + str(args.hidden_size_rnn) + '_' + str(args.hidden_size_rnn_output) + '_' + str(args.embedding_size_rnn) + '_' + str(args.embedding_size_rnn_output) + '_test_' + str(0) + '.dat'
     try:
         graph_test = utils.load_graph_list(fname_test,is_real=True)
     except:
@@ -174,13 +172,11 @@ def evaluation_epoch(dir_input, fname_output, model_name, dataset_name, args, is
             hidden = 64
         # read real graph
         if model_name=='Internal' or model_name=='Noise' or model_name=='B-A' or model_name=='E-R':
-            fname_test = dir_input + 'GraphRNN_MLP' + '_' + dataset_name + '_' + str(args.num_layers) + '_' + str(
-                hidden) + '_test_' + str(0) + '.dat'
+            fname_test = dir_input + 'GraphRNN_MLP' + '_' + dataset_name + '_' + str(args.num_layers) + '_' + str(args.num_layers_edge)+ '_' + str(args.hidden_size_rnn) + '_' + str(args.hidden_size_rnn_output) + '_' + str(args.embedding_size_rnn) + '_' + str(args.embedding_size_rnn_output) + '_test_' + str(0) + '.dat'
         elif 'Baseline' in model_name:
             fname_test = dir_input + model_name + '_' + dataset_name + '_' + str(64) + '_test_' + str(0) + '.dat'
         else:
-            fname_test = dir_input + model_name + '_' + dataset_name + '_' + str(args.num_layers) + '_' + str(
-                hidden) + '_test_' + str(0) + '.dat'
+            fname_test = dir_input + model_name + '_' + dataset_name + '_' + str(args.num_layers) + '_' + str(args.num_layers_edge)+ '_' + str(args.hidden_size_rnn) + '_' + str(args.hidden_size_rnn_output) + '_' + str(args.embedding_size_rnn) + '_' + str(args.embedding_size_rnn_output) + '_test_' + str(0) + '.dat'
         try:
             graph_test = utils.load_graph_list(fname_test,is_real=True)
         except:
@@ -206,7 +202,7 @@ def evaluation_epoch(dir_input, fname_output, model_name, dataset_name, args, is
             for epoch in range(epoch_start,epoch_end,epoch_step):
                 for sample_time in range(1,4):
                     # get filename
-                    fname_pred = dir_input + model_name + '_' + dataset_name + '_' + str(args.num_layers) + '_' + str(self.num_layers_edge) + '_' + str(hidden) + '_pred_' + str(epoch) + '_' + str(sample_time) + '.dat'
+                    fname_pred = dir_input + model_name + '_' + dataset_name + '_' + str(args.num_layers) + '_' + str(args.num_layers_edge)+ '_' + str(args.hidden_size_rnn) + '_' + str(args.hidden_size_rnn_output) + '_' + str(args.embedding_size_rnn) + '_' + str(args.embedding_size_rnn_output) + '_pred_' + str(epoch) + '_' + str(sample_time) + '.dat'
                     # load graphs
                     try:
                         graph_pred = utils.load_graph_list(fname_pred,is_real=False) # default False
@@ -607,8 +603,7 @@ def process_kron(kron_dir):
  
 
 if __name__ == '__main__':
-    args = Args(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[3]))
-    args_evaluate = Args_evaluate()    
+      
 
     parser = argparse.ArgumentParser(description='Evaluation arguments.')
     feature_parser = parser.add_mutually_exclusive_group(required=False)
@@ -625,12 +620,28 @@ if __name__ == '__main__':
                  'models on multiple datasets.')
     parser.add_argument('--graph-type', dest='graph_type',
             help='Type of graphs / dataset.')
+    parser.add_argument('--num-layers', dest='num_layers',
+            help='number of layers in graph RNN.')
+    parser.add_argument('--num-layers_edge', dest='num_layers_edge',
+            help='number of layers in edge RNN.')
+    parser.add_argument('--cuda_number', dest='cuda_number',
+            help='cuda number')
+    parser.add_argument('--hidden_size_rnn', dest='hidden_size_rnn',
+            help='hidden_size_rnn')
+    parser.add_argument('--hidden_size_rnn_output', dest='hidden_size_rnn_output',
+            help='hidden_size_rnn_output')
+    parser.add_argument('--embedding_size_rnn', dest='embedding_size_rnn',
+            help='embedding_size_rnn')
+    parser.add_argument('--embedding_size_rnn_output', dest='embedding_size_rnn_output',
+            help='embedding_size_rnn_output')
     
+    args = Args(4,4,3)
+    args_evaluate = Args_evaluate()  
     parser.set_defaults(export=False, kron_dir='', test_file='',
                         dir_prefix='',
                         graph_type=args.graph_type)
     prog_args = parser.parse_args()
-
+    args = Args(prog_args.num_layers,prog_args.num_layers_edge,prog_args.cuda_number,prog_args.hidden_size_rnn,prog_args.hidden_size_rnn_output,prog_args.embedding_size_rnn,prog_args.embedding_size_rnn_output,prog_args.graph_type)
     # dir_prefix = prog_args.dir_prefix
     # dir_prefix = "/dfs/scratch0/jiaxuany0/"
     dir_prefix = args.dir_input
